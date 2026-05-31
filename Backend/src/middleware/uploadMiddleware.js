@@ -1,9 +1,10 @@
 import multer from "multer";
 import fs from "fs";
+import os from "os";
 
-const uploadPath = "uploads/";
+const uploadPath = process.env.VERCEL ? os.tmpdir() : "uploads/";
 
-if (!fs.existsSync(uploadPath)) {
+if (!process.env.VERCEL && !fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath);
 }
 
