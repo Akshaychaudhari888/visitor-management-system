@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://visitor-management-system-su7w.vercel.app"],
     credentials: true,
   })
 );
