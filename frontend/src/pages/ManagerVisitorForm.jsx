@@ -19,7 +19,7 @@ function ManagerVisitorForm() {
       const pending = res.data.data.filter((v) => v.meetingStatus === 'Pending');
       setVisitors(pending);
     } catch (err) {
-      console.log(err);
+      setError(err.response?.data?.message || 'Failed to load visitors');
     }
   };
 

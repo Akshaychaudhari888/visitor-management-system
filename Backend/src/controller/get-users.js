@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find(
       {
@@ -18,10 +18,7 @@ const getUsers = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Error while fetching users',
-    });
+    next(error);
   }
 };
 

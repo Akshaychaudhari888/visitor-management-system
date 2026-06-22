@@ -1,6 +1,6 @@
 import Visitor from "../models/Visitor.js";
 
-const updateMeetingStatus = async (req, res) => {
+const updateMeetingStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -35,10 +35,7 @@ const updateMeetingStatus = async (req, res) => {
       data: visitor,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Error while update meeting status',
-    });
+    next(error);
   }
 };
 

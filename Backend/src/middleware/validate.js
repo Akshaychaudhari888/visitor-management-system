@@ -1,20 +1,17 @@
-const validate = (schema)=>{
-    try{
-        return (req,res,next)=>{
-            const {error} =  schema.validate(req.body);
+const validate = (schema) => {
+    return (req, res, next) => {
+        const { error } = schema.validate(req.body, { abortEarly: false });
 
-            if(error){
-                return res.status(400).json({
-                    success: false,
-                    message: error.details[0].message,
-                })
-            }
+        if (error) {
+            const messages = error.details.map((d) => d.message);
+            return res.status(400).json({
+                success: false,
+                message: messages.join(", "),
+            });
+        }
 
-            next();
-        }   
-    }catch(error){
-        throw error;
-    }
-}
+        next();
+    };
+};
 
 export default validate;

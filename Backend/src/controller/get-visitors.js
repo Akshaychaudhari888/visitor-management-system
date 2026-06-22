@@ -1,6 +1,6 @@
 import Visitor from "../models/Visitor.js";
 
-const getVisitors = async (req, res) => {
+const getVisitors = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
@@ -42,10 +42,7 @@ const getVisitors = async (req, res) => {
       data: visitors,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Error while getting visitor list",
-    });
+    next(error);
   }
 };
 

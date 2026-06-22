@@ -1,7 +1,7 @@
 import Visitor from "../models/Visitor.js";
 import ExcelJS from "exceljs";
 
-const downloadReport = async (req, res) => {
+const downloadReport = async (req, res, next) => {
   try {
     const visitors = await Visitor.find().populate(
       "contactPerson",
@@ -50,10 +50,7 @@ const downloadReport = async (req, res) => {
     await workbook.xlsx.write(res);
     res.end();
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error while downloading report',
-    });
+    next(error);
   }
 };
 

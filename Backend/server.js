@@ -8,6 +8,8 @@ import morgan from 'morgan';
 import authRoutes from './src/routes/auth.routes.js'
 import userRoute from './src/routes/user.routes.js';
 import visitorRoute from './src/routes/visitor.routes.js'
+import errorHandler from './src/middleware/errorHandler.js';
+import notFound from './src/middleware/notFound.js';
 
 
 
@@ -36,6 +38,9 @@ app.get("/",(req,res)=>{
 app.use("/api/auth",authRoutes);
 app.use('/api/user',userRoute);
 app.use('/api/visitor/',visitorRoute)
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 const MONGODB_URL = process.env.MONGODB_URL;

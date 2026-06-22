@@ -16,7 +16,7 @@ function VisitorOutForm() {
       const active = res.data.data.filter((v) => !v.visitorOutTime);
       setVisitors(active);
     } catch (err) {
-      console.log(err);
+      setError(err.response?.data?.message || 'Failed to load visitors');
     }
   };
 
