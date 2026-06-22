@@ -1,29 +1,16 @@
-import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import DashboardLayout from '../components/DashboardLayout';
 import { useAuth } from '../context/AuthContext';
-import '../styles/dashboard.css';
 
 function ManagerDashboard() {
   const { user } = useAuth();
   const basePath = user.role === 'HR' ? '/hr' : '/manager';
 
-  return (
-    <div className="page-container">
-      <Navbar title={`${user.role} Dashboard`} />
-      <div className="dashboard-content">
-        <div className="dashboard-cards">
-          <Link to={`${basePath}/visitor-form`} className="dashboard-card">
-            <h3>Visitor Form</h3>
-            <p>Update meeting status</p>
-          </Link>
-          <Link to={`${basePath}/visitor-list`} className="dashboard-card">
-            <h3>Visitor List</h3>
-            <p>View past visitors</p>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  const cards = [
+    { to: `${basePath}/visitor-form`, title: 'Visitor Form', description: 'Update meeting status' },
+    { to: `${basePath}/visitor-list`, title: 'Visitor List', description: 'View past visitors' },
+  ];
+
+  return <DashboardLayout title={`${user.role} Dashboard`} cards={cards} />;
 }
 
 export default ManagerDashboard;

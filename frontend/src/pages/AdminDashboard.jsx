@@ -1,25 +1,12 @@
-import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import '../styles/dashboard.css';
+import DashboardLayout from '../components/DashboardLayout';
+
+const cards = [
+  { to: '/admin/role-creation', title: 'Role Creation', description: 'Create Security, Manager, HR users' },
+  { to: '/admin/visitor-details', title: 'Visitor Details', description: 'View all visitor records' },
+];
 
 function AdminDashboard() {
-  return (
-    <div className="page-container">
-      <Navbar title="Admin Dashboard" />
-      <div className="dashboard-content">
-        <div className="dashboard-cards">
-          <Link to="/admin/role-creation" className="dashboard-card">
-            <h3>Role Creation</h3>
-            <p>Create Security, Manager, HR users</p>
-          </Link>
-          <Link to="/admin/visitor-details" className="dashboard-card">
-            <h3>Visitor Details</h3>
-            <p>View all visitor records</p>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+  return <DashboardLayout title="Admin Dashboard" cards={cards} />;
 }
 
 export default AdminDashboard;

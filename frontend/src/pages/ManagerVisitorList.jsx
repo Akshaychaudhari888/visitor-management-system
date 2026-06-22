@@ -2,8 +2,21 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import Navbar from '../components/Navbar';
+import VisitorTable from '../components/VisitorTable';
+import Pagination from '../components/Pagination';
 import { useAuth } from '../context/AuthContext';
 import '../styles/table.css';
+
+const columns = [
+  { key: 'visitorNo', header: 'Visitor No' },
+  { key: 'visitorName', header: 'Name' },
+  { key: 'mobileNumber', header: 'Mobile' },
+  { key: 'purpose', header: 'Purpose' },
+  { key: 'visitInTime', header: 'In Time', render: (v) => v ? new Date(v).toLocaleString() : '-' },
+  { key: 'visitorOutTime', header: 'Out Time', render: (v) => v ? new Date(v).toLocaleString() : '-' },
+  { key: 'totalTimeSpent', header: 'Total Time' },
+  { key: 'meetingStatus', header: 'Status' },
+];
 
 function ManagerVisitorList() {
   const [visitors, setVisitors] = useState([]);
@@ -32,39 +45,8 @@ function ManagerVisitorList() {
       <Navbar title="Past Visitors" />
       <div className="table-container">
         <button className="back-btn" onClick={() => navigate(basePath)}>Back</button>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Visitor No</th>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Purpose</th>
-              <th>In Time</th>
-              <th>Out Time</th>
-              <th>Total Time</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visitors.map((v) => (
-              <tr key={v._id}>
-                <td>{v.visitorNo}</td>
-                <td>{v.visitorName}</td>
-                <td>{v.mobileNumber}</td>
-                <td>{v.purpose}</td>
-                <td>{v.visitInTime ? new Date(v.visitInTime).toLocaleString() : '-'}</td>
-                <td>{v.visitorOutTime ? new Date(v.visitorOutTime).toLocaleString() : '-'}</td>
-                <td>{v.totalTimeSpent || '-'}</td>
-                <td>{v.meetingStatus}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="pagination">
-          <button disabled={page <= 1} onClick={() => setPage(page - 1)}>Prev</button>
-          <span>Page {page} of {totalPages}</span>
-          <button disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Next</button>
-        </div>
+        <VisitorTable columns={columns} data={visitors} />
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
     </div>
   );

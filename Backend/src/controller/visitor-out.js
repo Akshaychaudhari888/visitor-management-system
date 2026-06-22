@@ -1,47 +1,20 @@
-import Visitor from "../models/Visitor.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import { successResponse } from "../utils/response.js";
 
-const visitorOut = async (req, res) => {
-  try {
-    const { id } = req.params;
+const visitorOut = asyncHandler(async (req, res) => {
+  const visitor = req.visitor;
 
-    if(!id){
-        return res.status(400).json({
-            success: false,
-            message: 'id required'
-        })
-    }
+  const visitorOutTime = new Date();
+  const totalMinutes = Math.floor(
+    (visitorOutTime - visitor.visitInTime) / (1000 * 60)
+  );
 
-    const visitor = await Visitor.findById(id);
+  visitor.visitorOutTime = visitorOutTime;
+  visitor.totalTimeSpent = `${totalMinutes} minutes`;
 
-    if (!visitor) {
-      return res.status(404).json({
-        success: false,
-        message: "Visitor not found",
-      });
-    }
+  await visitor.save();
 
-    const visitorOutTime = new Date();
-
-    const totalMinutes = Math.floor(
-      (visitorOutTime - visitor.visitInTime) / (1000 * 60)
-    );
-
-    visitor.visitorOutTime = visitorOutTime;
-    visitor.totalTimeSpent = `${totalMinutes} minutes`;
-
-    await visitor.save();
-
-    return res.status(200).json({
-      success: true,
-      message: "Visitor exit updated successfully",
-      data: visitor,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+  return successResponse(res, visitor);
+});
 
 export default visitorOut;
