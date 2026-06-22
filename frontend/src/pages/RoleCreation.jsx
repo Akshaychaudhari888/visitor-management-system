@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import Navbar from '../components/Navbar';
+import FormMessages from '../components/FormMessages';
+import useFormStatus from '../hooks/useFormStatus';
 import '../styles/form.css';
 
 function RoleCreation() {
@@ -9,14 +11,12 @@ function RoleCreation() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('Security');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const { message, error, setMessage, setError, clearStatus } = useFormStatus();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    clearStatus();
     try {
       await API.post('/user/create-user', { userName, phone, password, role });
       setMessage('User created successfully');
@@ -34,8 +34,7 @@ function RoleCreation() {
       <div className="form-container">
         <form className="form-box" onSubmit={handleSubmit}>
           <h3 className="form-heading">Create User</h3>
-          {message && <p className="success-msg">{message}</p>}
-          {error && <p className="error-msg">{error}</p>}
+          <FormMessages message={message} error={error} />
           <div className="form-group">
             <label>Username</label>
             <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} required />

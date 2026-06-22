@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import Navbar from '../components/Navbar';
+import VisitorTable from '../components/VisitorTable';
+import FormMessages from '../components/FormMessages';
+import useFormStatus from '../hooks/useFormStatus';
 import '../styles/table.css';
 
 function VisitorOutForm() {
   const [visitors, setVisitors] = useState([]);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const { message, error, setMessage, setError, clearStatus } = useFormStatus();
   const navigate = useNavigate();
 
   const fetchVisitors = async () => {
@@ -25,8 +27,7 @@ function VisitorOutForm() {
   }, []);
 
   const handleOut = async (id) => {
-    setMessage('');
-    setError('');
+    clearStatus();
     try {
       await API.patch(`/visitor/out/${id}`);
       setMessage('Visitor out time updated');
@@ -36,36 +37,27 @@ function VisitorOutForm() {
     }
   };
 
+  const columns = [
+    { key: 'visitorNo', header: 'Visitor No' },
+    { key: 'visitorName', header: 'Name' },
+    { key: 'mobileNumber', header: 'Mobile' },
+    { key: 'visitInTime', header: 'In Time', render: (v) => new Date(v).toLocaleString() },
+    {
+      key: '_id',
+      header: 'Action',
+      render: (_, row) => (
+        <button className="action-btn" onClick={() => handleOut(row._id)}>Mark Out</button>
+      ),
+    },
+  ];
+
   return (
     <div className="page-container">
       <Navbar title="Visitor Out" />
       <div className="table-container">
         <button className="back-btn" onClick={() => navigate('/security')}>Back</button>
-        {message && <p className="success-msg">{message}</p>}
-        {error && <p className="error-msg">{error}</p>}
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Visitor No</th>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>In Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {visitors.map((v) => (
-              <tr key={v._id}>
-                <td>{v.visitorNo}</td>
-                <td>{v.visitorName}</td>
-                <td>{v.mobileNumber}</td>
-                <td>{new Date(v.visitInTime).toLocaleString()}</td>
-                <td><button className="action-btn" onClick={() => handleOut(v._id)}>Mark Out</button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {visitors.length === 0 && <p className="no-data">No active visitors</p>}
+        <FormMessages message={message} error={error} />
+        <VisitorTable columns={columns} data={visitors} emptyMessage="No active visitors" />
       </div>
     </div>
   );

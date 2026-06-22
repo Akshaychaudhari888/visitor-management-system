@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import Navbar from '../components/Navbar';
+import FormMessages from '../components/FormMessages';
+import useFormStatus from '../hooks/useFormStatus';
 import '../styles/form.css';
 
 function VisitorInForm() {
@@ -13,8 +15,7 @@ function VisitorInForm() {
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [photo, setPhoto] = useState(null);
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const { message, error, setMessage, setError, clearStatus } = useFormStatus();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,8 +32,7 @@ function VisitorInForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
+    clearStatus();
     try {
       const res = await API.post('/visitor/create-visitor', {
         visitorName,
@@ -40,14 +40,14 @@ function VisitorInForm() {
         contactPerson,
         purpose,
         noOfPersons,
-        vehicleNumber
+        vehicleNumber,
       });
 
       if (photo && res.data.data._id) {
         const formData = new FormData();
         formData.append('photo', photo);
         await API.patch(`/visitor/photo/${res.data.data._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
 
@@ -70,8 +70,7 @@ function VisitorInForm() {
       <div className="form-container">
         <form className="form-box" onSubmit={handleSubmit}>
           <h3 className="form-heading">Register Visitor</h3>
-          {message && <p className="success-msg">{message}</p>}
-          {error && <p className="error-msg">{error}</p>}
+          <FormMessages message={message} error={error} />
           <div className="form-group">
             <label>Visitor Name</label>
             <input type="text" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} required />
