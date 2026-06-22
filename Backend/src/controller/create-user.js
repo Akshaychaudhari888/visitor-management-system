@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import getUserDetails from "../processor/get-user-details.js";
 import createUserAccount from "../processor/create-user.js";
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const { userName, password, phone, role } = req.body;
 
@@ -25,10 +25,7 @@ const createUser = async (req, res) => {
     });
     return res.status(201).json({ success: true, data: user });
   } catch (error) {
-    console.log("Error while creating user", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Error while creating user" });
+    next(error);
   }
 };
 

@@ -23,7 +23,7 @@ function VisitorInForm() {
         const res = await API.get('/user');
         setUsers(res.data.data);
       } catch (err) {
-        console.log(err);
+        setError(err.response?.data?.message || 'Failed to load contact persons');
       }
     };
     fetchUsers();

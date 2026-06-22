@@ -8,6 +8,7 @@ function VisitorDetails() {
   const [visitors, setVisitors] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const fetchVisitors = async () => {
@@ -16,7 +17,7 @@ function VisitorDetails() {
       setVisitors(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
-      console.log(err);
+      setError(err.response?.data?.message || 'Failed to load visitors');
     }
   };
 
@@ -29,6 +30,7 @@ function VisitorDetails() {
       <Navbar title="Visitor Details" />
       <div className="table-container">
         <button className="back-btn" onClick={() => navigate('/admin')}>Back</button>
+        {error && <p className="error-msg">{error}</p>}
         <table className="data-table">
           <thead>
             <tr>

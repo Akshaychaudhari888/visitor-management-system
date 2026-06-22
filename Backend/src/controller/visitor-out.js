@@ -1,6 +1,6 @@
 import Visitor from "../models/Visitor.js";
 
-const visitorOut = async (req, res) => {
+const visitorOut = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -37,10 +37,7 @@ const visitorOut = async (req, res) => {
       data: visitor,
     });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    next(error);
   }
 };
 

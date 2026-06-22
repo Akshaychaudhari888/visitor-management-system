@@ -2,10 +2,8 @@ import getUserDetails from "../processor/get-user-details.js";
 import {generateToken} from '../utils/jwt.js'
 import bcrypt from "bcryptjs";
 
-
-const login = async (req, res) => {
+const login = async (req, res, next) => {
   try {
-    console.log("api called");
     const { phone, password } = req.body;
 
     const user = await getUserDetails({findBy: {phone}})
@@ -45,10 +43,7 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error while login",
-    });
+    next(error);
   }
 };
 

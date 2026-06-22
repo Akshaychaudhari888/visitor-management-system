@@ -1,7 +1,7 @@
 import Visitor from "../models/Visitor.js";
 import createVisitorAccount from '../processor/create-visitor.js'
 
-const createVisitor = async (req, res) => {
+const createVisitor = async (req, res, next) => {
   try {
     const {
       visitorName,
@@ -32,10 +32,7 @@ const createVisitor = async (req, res) => {
       data: visitor,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error while adding visitor",
-    });
+    next(error);
   }
 };
 

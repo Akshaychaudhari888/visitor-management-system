@@ -9,6 +9,7 @@ function ManagerVisitorList() {
   const [visitors, setVisitors] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
   const basePath = user.role === 'HR' ? '/hr' : '/manager';
@@ -19,7 +20,7 @@ function ManagerVisitorList() {
       setVisitors(res.data.data);
       setTotalPages(res.data.totalPages);
     } catch (err) {
-      console.log(err);
+      setError(err.response?.data?.message || 'Failed to load visitors');
     }
   };
 
@@ -32,6 +33,7 @@ function ManagerVisitorList() {
       <Navbar title="Past Visitors" />
       <div className="table-container">
         <button className="back-btn" onClick={() => navigate(basePath)}>Back</button>
+        {error && <p className="error-msg">{error}</p>}
         <table className="data-table">
           <thead>
             <tr>
