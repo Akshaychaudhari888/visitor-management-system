@@ -15,9 +15,9 @@ const router = express.Router();
 router.get("/login", validate(loginUser), login);
 router.post(
   "/create-user",
-  validate(createUserValidation),
   authMiddleware,
   roleMiddleware("Admin"),
+  validate(createUserValidation),
   createUser,
 );
 

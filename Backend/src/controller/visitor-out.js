@@ -39,7 +39,7 @@ const visitorOut = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Error while updating visitor exit",
     });
   }
 };
